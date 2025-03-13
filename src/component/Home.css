@@ -1,0 +1,274 @@
+/* =======================
+   Global Styles
+======================= */
+
+/* Ensure the entire page is scrollable */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  overflow-y: auto; /* Allow vertical scrolling */
+  width: 100vw; /* Full width */
+}
+
+/* =======================
+   Navbar Styles
+======================= */
+
+.navbar {
+  width: 100%;
+  max-width: 100vw; /* Ensure full width */
+  padding: 10px 20px;
+  background-color: #a52a2a; /* Match the image's maroon color */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Align nav text properly */
+.nav-text {
+  position: relative;
+  top: 19px;
+  left: -27px;
+}
+
+/* =======================
+   Home Page Styles
+======================= */
+
+.home-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden; /* Remove horizontal scrollbar */
+  margin: 0; /* Ensure no centering */
+}
+
+/* Header section */
+.books-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px 10px 20px; /* Match left padding with container */
+}
+
+/* Title for books section */
+.books-title {
+  text-align: left;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.bookfont {
+  position: relative;
+  font-size: 1.5rem;
+  display: inline;
+  left: 126px;
+}
+
+.bookCount {
+  display: inline;
+  position: relative;
+  left: 131px;
+  bottom: 2px;
+  font-size: small;
+  color: lightgray;
+}
+
+
+/* Books container (replacing books-grid) */
+/* Books container (replacing books-grid) */
+/* Books container (replacing books-grid) */
+/* Books container (replacing books-grid) */
+.books-container {
+  position: relative;
+    display: grid
+;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 19px;
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    left: 112px;
+    row-gap: 28px;
+}
+
+/* Ensure book-card takes full width of its grid column */
+.book-card {
+  width: 100%;
+  max-width: 153px; /* Limit card width */
+  height: auto;
+}
+
+
+.book-card:hover {
+  transform: translateY(-4px); /* Slight lift on hover */
+}
+
+/* Book image styling */
+.book-card .book-image {
+  position: relative;
+  width: 47%;
+  height: 94px;
+  object-fit: cover;
+  display: block;
+  margin: 0;
+  left: 35px; /* Consider removing if alignment is off */
+}
+
+/* Book content container */
+.book-content {
+  text-align: center;
+  padding: 0; /* Remove padding to maintain tight content */
+}
+/* Book title with ellipsis for overflow */
+.book-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* Author text styling */
+.book-author {
+  color: gray;
+  font-size: 0.8rem;
+}
+
+/* Rating badge */
+.book-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.rating-text {
+  background-color: green;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+}
+
+/* Discounted price */
+.discount-price {
+  color: gray;
+  font-size: 0.7rem;
+  margin-left: 4px;
+}
+
+/* =======================
+   Book Details Page Styles
+======================= */
+
+.book-details {
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  overflow-y: auto;
+  padding-bottom: 40px;
+}
+
+/* Container for book details page */
+.book-details-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Section for book image */
+.book-image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 250px;
+}
+
+.book-image-section .book-image {
+  max-width: 200px;
+  height: auto;
+}
+
+/* Section for book information */
+.book-info-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-width: 500px;
+}
+
+.book-info-section h4 {
+  margin: 0;
+}
+
+.book-info-section h6 {
+  margin: 4px 0;
+  color: #666;
+}
+
+/* Buttons in the book details page */
+.book-info-section .MuiButton-contained {
+  background-color: #b22222;
+}
+
+.book-info-section .MuiButton-contained:hover {
+  background-color: #8b0000;
+}
+
+.book-info-section .MuiButton-outlined {
+  color: #000;
+  border-color: #000;
+}
+
+/* Adjust sort container positioning */
+.sort-container {
+  position: relative;
+  bottom: 0px;
+  right: 10px;
+}
+
+/* Remove unnecessary margins causing extra space */
+.Books {
+  position: relative;
+  left: 113px;
+  width: auto;
+  height: auto;
+}
+
+/* Adjust book image */
+.bookImg {
+  width: 25px;
+  height: 20px;
+  position: relative;
+  right: 0;
+}
+.star{
+  position:relative;
+  top:4px;
+  right:17px;
+}
+.orLogin{
+  position: relative;
+  top: 2px;
+  font-size: large;
+}
+.orSignup{
+  position: relative;
+  bottom: 44px;
+
+}
+.pagination-container{
+  position: relative;
+  left: 585px;
+}
