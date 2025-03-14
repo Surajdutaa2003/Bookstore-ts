@@ -260,8 +260,9 @@ html, body {
 }
 .orLogin{
   position: relative;
-  top: 2px;
+  top: 8px;
   font-size: large;
+  left: 149px;
 }
 .orSignup{
   position: relative;
