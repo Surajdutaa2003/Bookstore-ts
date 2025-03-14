@@ -1,22 +1,36 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+// src/component/BookDetails.tsx
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Box, Typography, Button, CardMedia } from "@mui/material";
 import Navbar from "./Navbar";
-import books from "../component/BookData";
+import books from "./BookData";
 import "./Home.css"; // Import CSS file
+import { useWishlist } from "./WishlistContext";
+import { useCart } from "./CartContext"; // Import CartContext
 
 const BookDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const book = books.find((b) => b.id === Number(id));
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
+  const { cart, addToCart, updateQuantity } = useCart(); // Use CartContext
+  const isBookInWishlist = book ? wishlist.includes(book.id) : false;
 
-  const [count, setCount] = useState(0); // State for tracking quantity
+  // Get the quantity of this book in the cart
+  const cartItem = cart.find((item) => item.id === Number(id));
+  const [count, setCount] = useState(cartItem ? cartItem.quantity : 0);
   const [rating, setRating] = useState(0); // State for selected rating
+
+  // Sync local count with cart quantity
+  useEffect(() => {
+    const cartItem = cart.find((item) => item.id === Number(id));
+    setCount(cartItem ? cartItem.quantity : 0);
+  }, [cart, id]);
 
   if (!book) {
     return (
       <Box>
-              <Navbar showSearchAndIcons={true} /> {/* Hide Search Bar & Icons */}
-
+        <Navbar showSearchAndIcons={true} />
         <Typography variant="h5" sx={{ textAlign: "center", mt: 5 }}>
           Book Not Found
         </Typography>
@@ -24,14 +38,27 @@ const BookDetails: React.FC = () => {
     );
   }
 
+  const handleAddToCart = () => {
+    if (count === 0) {
+      addToCart(book.id); // Add to cart if count is 0
+    } else {
+      updateQuantity(book.id, count + 1); // Increment quantity
+    }
+    setCount((prev) => prev + 1);
+  };
+
   return (
     <Box className="book-details">
-           <Navbar showSearchAndIcons={true} /> {/* Hide Search Bar & Icons */}
-
-
-      <Box className="book-details-container" sx={{ display: "flex", justifyContent: "center", gap: 4, p: 4, flexWrap: "wrap" }}>
+      <Navbar showSearchAndIcons={true} />
+      <Box
+        className="book-details-container"
+        sx={{ display: "flex", justifyContent: "center", gap: 4, p: 4, flexWrap: "wrap" }}
+      >
         {/* Left Column - Book Image, Small Containers, and Buttons */}
-        <Box className="book-image-section" sx={{ minWidth: "250px", textAlign: "center", position: "relative" }}>
+        <Box
+          className="book-image-section"
+          sx={{ minWidth: "250px", textAlign: "center", position: "relative" }}
+        >
           {/* Book Image */}
           <CardMedia
             component="img"
@@ -44,10 +71,20 @@ const BookDetails: React.FC = () => {
           {/* Small Containers with Book Image */}
           <Box sx={{ position: "absolute", top: 0, left: -60, display: "flex", flexDirection: "column", gap: 1 }}>
             <Box sx={{ width: "40px", height: "60px", borderRadius: 1, overflow: "hidden" }}>
-              <CardMedia component="img" image={book.image} alt={book.title} sx={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <CardMedia
+                component="img"
+                image={book.image}
+                alt={book.title}
+                sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
             </Box>
             <Box sx={{ width: "40px", height: "60px", borderRadius: 1, overflow: "hidden" }}>
-              <CardMedia component="img" image={book.image} alt={book.title} sx={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <CardMedia
+                component="img"
+                image={book.image}
+                alt={book.title}
+                sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
             </Box>
           </Box>
 
@@ -55,15 +92,24 @@ const BookDetails: React.FC = () => {
           <Box sx={{ mt: 2 }}>
             <Button
               variant="contained"
-              color="primary"
               sx={{ backgroundColor: "#B22222", "&:hover": { backgroundColor: "#8B0000" }, minWidth: "120px" }}
-              onClick={() => setCount(count + 1)}
+              onClick={handleAddToCart}
             >
-              {count === 0 ? "ADD TO BAG" : count} {/* Show count instead of text */}
+              {count === 0 ? "ADD TO BAG" : `IN BAG (${count})`}
             </Button>
-
-            <Button variant="outlined" color="secondary" sx={{ ml: 2, color: "#000", borderColor: "#000" }}>
-              WISHLIST
+            <Button
+              variant="outlined"
+              sx={{ ml: 2, color: "#000", borderColor: "#000" }}
+              onClick={() => {
+                if (isBookInWishlist) {
+                  removeFromWishlist(book.id);
+                } else {
+                  addToWishlist(book.id);
+                }
+                navigate("/wishlist");
+              }}
+            >
+              {isBookInWishlist ? "REMOVE FROM WISHLIST" : "ADD TO WISHLIST"}
             </Button>
           </Box>
         </Box>
@@ -81,7 +127,8 @@ const BookDetails: React.FC = () => {
           </Typography>
 
           <Typography variant="h5" sx={{ mt: 1 }}>
-            Rs. {book.price} <s style={{ color: "gray", fontSize: "1rem" }}>Rs. {book.discountPrice}</s>
+            Rs. {book.price}{" "}
+            <s style={{ color: "gray", fontSize: "1rem" }}>Rs. {book.discountPrice}</s>
           </Typography>
 
           {/* Book Detail Section */}
@@ -112,10 +159,9 @@ const BookDetails: React.FC = () => {
                   style={{
                     fontSize: "22px",
                     cursor: "pointer",
-                    color: star <= rating ? "#FFA500" : "#C0C0C0", // Orange for selected, Grey for unselected
+                    color: star <= rating ? "#FFA500" : "#C0C0C0",
                     marginRight: "2px",
                   }}
-                  
                 >
                   ★
                 </span>
@@ -143,7 +189,7 @@ const BookDetails: React.FC = () => {
           </Box>
 
           {/* Existing Reviews */}
-          <Box sx={{ border: "1px solid #ddd", borderRadius: 2, p: 2 }}>
+          <Box sx={{ border: "1px solid #ddd", borderRadius: "2px", p: 2 }}>
             <Box sx={{ mb: 2 }}>
               <Typography variant="body2" sx={{ fontWeight: "bold" }}>
                 Aniket Chile
