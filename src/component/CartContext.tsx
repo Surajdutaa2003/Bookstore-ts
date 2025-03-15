@@ -1,45 +1,47 @@
-// src/component/CartContext.tsx
-import React, { createContext, useState, useContext } from "react";
+// src/context/CartContext.tsx
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface CartItem {
-  id: number;
+  id: number | string; // Updated to handle string IDs
   quantity: number;
 }
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (id: number) => void;
-  removeFromCart: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  addToCart: (id: number | string) => void;
+  removeFromCart: (id: number | string) => void;
+  updateQuantity: (id: number | string, quantity: number) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  const addToCart = (id: number) => {
-    setCart((prev) => {
-      const existingItem = prev.find((item) => item.id === id);
+  const addToCart = (id: number | string) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === id);
       if (existingItem) {
-        return prev.map((item) =>
+        return prevCart.map((item) =>
           item.id === id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prev, { id, quantity: 1 }];
+      return [...prevCart, { id, quantity: 1 }];
     });
   };
 
-  const removeFromCart = (id: number) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+  const removeFromCart = (id: number | string) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: number | string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(id);
     } else {
-      setCart((prev) =>
-        prev.map((item) => (item.id === id ? { ...item, quantity } : item))
+      setCart((prevCart) =>
+        prevCart.map((item) =>
+          item.id === id ? { ...item, quantity } : item
+        )
       );
     }
   };
@@ -53,6 +55,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useCart = () => {
   const context = useContext(CartContext);
-  if (!context) throw new Error("useCart must be used within a CartProvider");
+  if (!context) {
+    throw new Error("useCart must be used within a CartProvider");
+  }
   return context;
 };

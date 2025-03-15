@@ -81,6 +81,7 @@ describe("LoginPage Component", () => {
 test("navigates to signup page when SIGNUP button is clicked", () => {
   // Arrange
   const navigateMock = jest.fn();
+  
   (useNavigate as jest.Mock).mockReturnValue(navigateMock); // ✅ Correct way to mock useNavigate
 
   const { getByText } = render(

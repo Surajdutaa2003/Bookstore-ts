@@ -1,10 +1,11 @@
+// src/component/BookCard.tsx
 import React from "react";
 import { Card, CardContent, CardMedia, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import "./Home.css"; // Import the combined CSS file
+import "./Home.css";
 
 interface BookProps {
-  id: number;
+  id: number | string;
   title: string;
   author: string;
   image: string;

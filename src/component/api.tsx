@@ -14,14 +14,14 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
   if (token) {
-    config.headers["x-access-token"] = token; // Use x-access-token as per Swagger
+    config.headers["x-access-token"] = token;
   }
   return config;
 });
 
 interface ApiErrorResponse {
   message?: string;
-  error?: string; // Added to handle possible 'error' field
+  error?: string;
   [key: string]: any;
 }
 
@@ -36,6 +36,24 @@ interface LoginResponse {
   success: boolean;
   message: string;
   result: { accessToken: string } | null;
+}
+
+interface ApiBook {
+  _id: string;
+  bookName: string;
+  author: string;
+  price: number;
+  quantity: number;
+  bookImage?: string | null;
+  discountPrice: number;
+  description: string;
+  [key: string]: any;
+}
+
+interface BooksResponse {
+  success: boolean;
+  message: string;
+  result: ApiBook[];
 }
 
 export const login = async (email: string, password: string) => {
@@ -88,6 +106,29 @@ export const signup = async (userData: SignupData) => {
     throw axiosError.response?.data?.message || axiosError.response?.data?.error
       ? new Error(axiosError.response.data.message || axiosError.response.data.error)
       : new Error("Signup failed: Invalid data provided. Check the form and try again.");
+  }
+};
+
+export const getBooks = async (): Promise<ApiBook[]> => {
+  try {
+    const response = await api.get<BooksResponse>("/bookstore_user/get/book");
+    if (response.data.success && Array.isArray(response.data.result)) {
+      return response.data.result;
+    } else {
+      throw new Error(response.data.message || "Failed to fetch books");
+    }
+  } catch (error) {
+    const axiosError = error as AxiosError<ApiErrorResponse>;
+    console.error("Get Books API error - Full Response:", JSON.stringify(axiosError.response?.data, null, 2));
+    console.error("Get Books API error details:", {
+      error,
+      response: axiosError.response,
+      data: axiosError.response?.data,
+      status: axiosError.response?.status,
+    });
+    throw axiosError.response?.data?.message || axiosError.response?.data?.error
+      ? new Error(axiosError.response.data.message || axiosError.response.data.error)
+      : new Error("Failed to fetch books due to a network or server error");
   }
 };
 
